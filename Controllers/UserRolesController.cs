@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Permissions.ViewModels;
 
 namespace Permissions.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UserRolesController : Controller
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -71,9 +73,6 @@ namespace Permissions.Controllers
             var newRoles = receivedRoles.Where(r => r.IsSelected).Select(r => r.RoleName);
 
             await _userManager.AddToRolesAsync(user, newRoles);
-
-            // Update info in cookie
-            await _signInManager.RefreshSignInAsync(user);
 
             return RedirectToAction("Index", "User");
         }
