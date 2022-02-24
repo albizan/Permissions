@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<IdentityUser>
+
+<h1>User List</h1>
+<br />
+<table class="table table-striped" id="userTable">
+    <thead>
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Id
+            </th>
+            <th style="width:10%">
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-sm">
+                            <a>
+                                @user.Email
+                            </a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <a>
+                        @user.Id
+                    </a>
+                </td>
+                <td>
+                    <div class="btn-group dropdown">
+                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu fs-6" aria-labelledby="dropdownMenuButton1">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-wrench"></i> Manage roles
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
