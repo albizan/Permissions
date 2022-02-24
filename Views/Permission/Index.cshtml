@@ -1,0 +1,51 @@
+﻿@model Permissions.ViewModels.RoleClaims
+
+<h1>Permissions</h1>
+<br />
+<div class="card">
+    <div id="viewAll" class="card-body table-responsive">
+        <form asp-controller="permission" method="post" asp-action="Edit" class="d-inline">
+            <input asp-for="@Model.Id" type="hidden" />
+            <table class="table table-striped" id="permissionTable">
+                <thead>
+                    <tr>
+                        <th>
+                            Type
+                        </th>
+                        <th>
+                            Permission
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Claims.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                <input asp-for="@Model.Claims[i].Type" type="hidden" />
+                                @Model.Claims[i].Type
+                            </td>
+                            <td>
+                                <input asp-for="@Model.Claims[i].Value" type="hidden" />
+                                @Model.Claims[i].Value
+                            </td>
+                            <td>
+                                <div class="form-check m-1">
+                                    <input asp-for="@Model.Claims[i].IsSelected" class="form-check-input" />
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="col-sm-12" style="padding: 20px 20px 0px 0px">
+                <button type="submit" id="save" class="btn btn-primary">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
