@@ -9,8 +9,8 @@ namespace Permissions.Seeds
     {
         public static async Task SeedAsync(UserManager<IdentityUser> userManager, string password)
         {
-            await SeedUser(userManager, Roles.User.ToString(), password);
-            await SeedUser(userManager, Roles.Admin.ToString(), password);
+            await SeedUser(userManager, Roles.User.ToString().ToLower(), password);
+            await SeedUser(userManager, Roles.Admin.ToString().ToLower(), password);
         }
         private static async Task SeedUser(UserManager<IdentityUser> userManager, string role, string password)
         {
