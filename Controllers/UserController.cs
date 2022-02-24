@@ -14,7 +14,7 @@ namespace Permissions.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             var currentUserId = _userManager.GetUserId(User);
             var allOtherUsers = _userManager.Users.Where(a => a.Id != currentUserId).ToList();
