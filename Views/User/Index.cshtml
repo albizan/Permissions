@@ -42,8 +42,8 @@
                         </button>
                         <ul class="dropdown-menu fs-6" aria-labelledby="dropdownMenuButton1">
                             <li>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-wrench"></i> Manage roles
+                                <a class="dropdown-item" asp-controller="UserRoles" asp-action="Index" asp-route-userId=@user.Id>
+                                    Manage roles
                                 </a>
                             </li>
                         </ul>

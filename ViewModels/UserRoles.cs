@@ -2,7 +2,8 @@
 {
     public class UserRoles
     {
-        public string UserId { get; set; }
-        public ICollection<UserRole> Roles { get; set; }
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public List<UserRole> Roles { get; set; }
     }
 }
