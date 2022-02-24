@@ -1,0 +1,67 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using Permissions.Constants;
+@model IEnumerable<IdentityRole>
+
+
+    <h1>Roles</h1>
+    <br />
+    <form method="post" asp-action="Create" asp-controller="Role">
+        <div class="input-group">
+            <input name="roleName" class="form-control w-25">
+            <span class="input-group-btn">
+                <button class="btn btn-primary">Create Role</button>
+            </span>
+        </div>
+    </form>
+    <table class="table table-striped" id="roleTable">
+        <thead>
+            <tr>
+                <th>
+                    Role
+                </th>
+                <th>
+                    Id
+                </th>
+                <th style="width:10%">
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model)
+            {
+                <tr>
+                    <td>
+                        @role.Name
+                    </td>
+                    <td>
+                        @role.Id
+                    </td>
+                    <td class="text-right">
+                        @if(role.Name != Roles.Admin.ToString())
+                        {
+                            <div class="btn-group dropdown">
+                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu shadow animated--grow-in">
+                                <li>
+                                    <a asp-action="Edit" asp-route-roleId="@role.Id" class="dropdown-item">Edit</a>
+                                </li>
+                                <li>
+                                    <a asp-action="Delete" asp-route-roleId="@role.Id" class="dropdown-item">Delete</a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
+                                        Manage Permissions
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        }
+                    
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
