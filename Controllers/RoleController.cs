@@ -18,10 +18,12 @@ namespace Permissions.Controllers
         public IActionResult Index()
         {
             var roles = _roleManager.Roles.ToList();
+            roles.Sort((a, b) => a.Name.CompareTo(b.Name));
             return View(roles);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddRole(string roleName)
         {
             if (roleName != null)
