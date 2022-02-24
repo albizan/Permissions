@@ -6,7 +6,7 @@
 <div class="card">
 
     <div id="viewAll" class="card-body table-responsive">
-        <form asp-controller="UserRoles" method="post" asp-action="Edit" asp-route-id="@Model.Id" class="d-inline">
+        <form asp-controller="UserRoles" method="post" asp-action="Edit" asp-route-userId="@Model.Id" class="d-inline">
             <input asp-for="@Model.Id" type="hidden" />
             <input asp-for="@Model.Email" type="hidden" />
             <table class="table table-striped" id="userRolesTable">
