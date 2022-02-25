@@ -46,10 +46,7 @@
                             </button>
                             <ul class="dropdown-menu shadow animated--grow-in">
                                 <li>
-                                    <a asp-action="Edit" asp-route-roleId="@role.Id" class="dropdown-item">Edit</a>
-                                </li>
-                                <li>
-                                    <a asp-action="Delete" asp-route-roleId="@role.Id" class="dropdown-item">Delete</a>
+                                    <a asp-action="Delete" asp-route-Id="@role.Id" class="dropdown-item">Delete</a>
                                 </li>
                                 <li>
                                     <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
