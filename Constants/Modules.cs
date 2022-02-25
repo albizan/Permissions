@@ -2,8 +2,7 @@
 {
     public enum Modules
     {
-        Products,
-        Orders,
-        Customers
+        Weapons,
+        Heroes
     }
 }
