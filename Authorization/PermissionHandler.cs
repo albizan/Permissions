@@ -18,7 +18,7 @@ namespace Permissions.Authorization
             {
                 return Task.CompletedTask;
             }
-            var permissionClaim = context.User.Claims.Where(c => c.Type == "Permission" && c.Value == requirement.Permission).First();
+            var permissionClaim = context.User.Claims.Where(c => c.Type == "Permission" && c.Value == requirement.Permission).FirstOrDefault();
             if (permissionClaim != null)
             {
                 context.Succeed(requirement);
