@@ -27,11 +27,15 @@ namespace Permissions.Controllers
 
             // Create a list of permissions for every module (entity) of the app
             // Defa
-            // Entities: Products...
-            var modulePermissions = PermissionsManager.CreateModulePermissions(Modules.Products.ToString());
+            // Entities: Weapons, Heroes...
             var allPossibleClaims = new List<RoleClaim>();
-            allPossibleClaims.AddRange(modulePermissions.Select(mp => new RoleClaim() { Type="Permission", Value=mp, IsSelected=false}));
-
+            var allModules = Enum.GetNames<Modules>();
+            foreach(var module in allModules)
+            {
+                var modulePermissions = PermissionsManager.CreateModulePermissions(module);
+                allPossibleClaims.AddRange(modulePermissions.Select(mp => new RoleClaim() { Type = "Permission", Value = mp, IsSelected = false }));
+            }
+            
             // Get current permissions for given role
             var role = await _roleManager.FindByIdAsync(roleId);
             var currentClaims = await _roleManager.GetClaimsAsync(role);
