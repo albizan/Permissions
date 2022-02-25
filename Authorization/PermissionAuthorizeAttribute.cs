@@ -8,7 +8,7 @@ namespace Permissions.Authorization
         private const string POLICY_PREFIX = "Permissions";
         public NeedPermission(Modules module, Operations operation)
         {
-            Policy = $"{POLICY_PREFIX}.{module.ToString()}.{operation.ToString()}";
+            Policy = $"{POLICY_PREFIX}.{module}.{operation}";
         }
     }
 }
