@@ -29,6 +29,7 @@ namespace Permissions.Controllers
         }
 
         // GET: Weapon/Details/5
+        [NeedPermission(Modules.Weapons, Operations.Read)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +48,7 @@ namespace Permissions.Controllers
         }
 
         // GET: Weapon/Create
+        [NeedPermission(Modules.Weapons, Operations.Create)]
         public IActionResult Create()
         {
             return View();
@@ -57,6 +59,7 @@ namespace Permissions.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NeedPermission(Modules.Weapons, Operations.Create)]
         public async Task<IActionResult> Create([Bind("Id,Name,Damage,Level")] Weapon weapon)
         {
             if (ModelState.IsValid)
@@ -69,6 +72,7 @@ namespace Permissions.Controllers
         }
 
         // GET: Weapon/Edit/5
+        [NeedPermission(Modules.Weapons, Operations.Edit)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -89,6 +93,7 @@ namespace Permissions.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [NeedPermission(Modules.Weapons, Operations.Edit)]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Damage,Level")] Weapon weapon)
         {
             if (id != weapon.Id)
@@ -120,6 +125,7 @@ namespace Permissions.Controllers
         }
 
         // GET: Weapon/Delete/5
+        [NeedPermission(Modules.Weapons, Operations.Delete)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,6 +146,7 @@ namespace Permissions.Controllers
         // POST: Weapon/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [NeedPermission(Modules.Weapons, Operations.Delete)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var weapon = await _context.Weapons.FindAsync(id);
