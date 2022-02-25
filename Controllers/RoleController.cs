@@ -24,12 +24,35 @@ namespace Permissions.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRole(string roleName)
+        public async Task<IActionResult> Create(string roleName)
         {
             if (roleName != null)
             {
                 await _roleManager.CreateAsync(new IdentityRole(roleName.Trim()));
             }
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var role = await _roleManager.FindByIdAsync(id);
+            return View(role);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var role = await _roleManager.FindByIdAsync(id);
+            await _roleManager.DeleteAsync(role);
             return RedirectToAction("Index");
         }
     }
