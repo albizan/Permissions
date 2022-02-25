@@ -9,43 +9,51 @@ namespace Permissions.Seeds
     {
         public static async Task SeedAsync(RoleManager<IdentityRole> roleManager)
         {
-            // Create default roles
-            await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Helper.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+            // Create default roles if they do not exist
+            var role = await roleManager.FindByNameAsync(Roles.Admin.ToString());
+            if(role == null)
+                await roleManager.CreateAsync(new IdentityRole(Roles.Admin.ToString()));
 
-            // Add default permissions for "Products" (granted all) to admin role
+            role = await roleManager.FindByNameAsync(Roles.Helper.ToString());
+            if(role == null)
+                await roleManager.CreateAsync(new IdentityRole(Roles.Helper.ToString()));
+
+            role = await roleManager.FindByNameAsync(Roles.User.ToString());
+            if(role == null)
+                await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+
+            // Add default permissions for "all modules" (granted all) to admin role
             var adminRole = await roleManager.FindByNameAsync(Roles.Admin.ToString());
-            await AddAllPermissionsToRole(roleManager, adminRole, Modules.Products.ToString());
+            foreach(var module in Enum.GetNames<Modules>())
+                await AddPermissionsToRole(roleManager, adminRole, PermissionsManager.CreateModulePermissions(module));
 
             var userRole = await roleManager.FindByNameAsync(Roles.User.ToString());
-            await AddPermissionsToRole(roleManager, userRole, "Permissions.Products.Read");
-        }
-
-        public static async Task AddAllPermissionsToRole(RoleManager<IdentityRole> roleManager, IdentityRole role, string module)
-        {
-            var modulePermissions = PermissionsManager.CreateModulePermissions(module);
-            var currentClaims = await roleManager.GetClaimsAsync(role);
-            var currentClaimValues = currentClaims.Where(c => c.Type == "Permission").Select(c => c.Value).ToArray();
-
-            foreach (var permission in modulePermissions)
-            {
-                if(!currentClaimValues.Contains(permission))
-                await roleManager.AddClaimAsync(role, new Claim("Permission", permission));
-            }
+            await AddPermissionsToRole(roleManager, userRole, $"Permissions.{Modules.Weapons}.Read");
         }
 
         public static async Task AddPermissionsToRole(RoleManager<IdentityRole> roleManager, IdentityRole role, params string[] permissions)
         {
-            var currentClaims = await roleManager.GetClaimsAsync(role);
-            var currentClaimValues = currentClaims.Where(c => c.Type == "Permission").Select(c => c.Value).ToArray();
+            var newPermissions = await GetOnlyNewPermissions(roleManager, role, permissions);
 
-            foreach (var permission in permissions)
+            foreach (var permission in newPermissions)
             {
-                if (!currentClaimValues.Contains(permission))
-                    await roleManager.AddClaimAsync(role, new Claim("Permission", permission));
+                await roleManager.AddClaimAsync(role, new Claim("Permission", permission));
+            }
+        }
+
+        public static async Task<List<string>> GetOnlyNewPermissions(RoleManager<IdentityRole> roleManager, IdentityRole role, params string[] permissions)
+        {
+            var currentClaims = await roleManager.GetClaimsAsync(role);
+            var currentPermissions = currentClaims.Where(c => c.Type == "Permission").Select(c => c.Value).ToList();
+            var newPermissions = new List<string>();
+
+            foreach(var permission in permissions)
+            {
+                if (!currentPermissions.Contains(permission))
+                    newPermissions.Add(permission);
             }
 
+            return newPermissions;
         }
     }
 }
