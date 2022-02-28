@@ -1,4 +1,8 @@
 ﻿@model IEnumerable<Permissions.Models.Perk>
+@using Microsoft.AspNetCore.Authorization
+@using Permissions.Constants;
+@using Permissions.Utils;
+@inject IAuthorizationService authorizationService
 
 @{
     ViewData["Title"] = "Index";
@@ -9,7 +13,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table align-middle">
     <thead>
         <tr>
             <th>
@@ -36,14 +40,20 @@
                         Actions
                     </button>
                     <ul class="dropdown-menu shadow animated--grow-in">
+                        @if (authorizationService.AuthorizeAsync(User, PolicyNameGenerator.Generate(Modules.Perks, Operations.Delete)).Result.Succeeded)
+                        {
                         <li>
                             <a asp-action="Delete" asp-route-Id="@item.Id" class="dropdown-item">Delete</a>
-                        </li>
+                        </li>                            
+                        }
+                        @if (authorizationService.AuthorizeAsync(User, PolicyNameGenerator.Generate(Modules.Perks, Operations.Edit)).Result.Succeeded)
+                        {
                         <li>
                             <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
                                 Edit
                             </a>
-                        </li>
+                        </li>                           
+                        }
                     </ul>
                 </div>
             </td>
