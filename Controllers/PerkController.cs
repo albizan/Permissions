@@ -1,30 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Permissions.Authorization;
-using Permissions.Constants;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Permissions.Data;
 using Permissions.Models;
 
 namespace Permissions.Controllers
 {
-    public class WeaponController : Controller
+    [Authorize(Roles = "Admin")]
+    public class PerkController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public WeaponController(ApplicationDbContext context)
+        public PerkController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Weapon
-        [NeedPermission(Modules.Weapons, Operations.Read)]
+        // GET: Perk
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Weapons.ToListAsync());
+            return View(await _context.Perks.ToListAsync());
         }
 
-        // GET: Weapon/Details/5
-        [NeedPermission(Modules.Weapons, Operations.Read)]
+        // GET: Perk/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,42 +30,39 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var weapon = await _context.Weapons
+            var perk = await _context.Perks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (weapon == null)
+            if (perk == null)
             {
                 return NotFound();
             }
 
-            return View(weapon);
+            return View(perk);
         }
 
-        // GET: Weapon/Create
-        [NeedPermission(Modules.Weapons, Operations.Create)]
+        // GET: Perk/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Weapon/Create
+        // POST: Perk/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Weapons, Operations.Create)]
-        public async Task<IActionResult> Create([Bind("Id,Name,Damage,Level")] Weapon weapon)
+        public async Task<IActionResult> Create([Bind("Id,Name,Bonus")] Perk perk)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(weapon);
+                _context.Add(perk);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(weapon);
+            return View(perk);
         }
 
-        // GET: Weapon/Edit/5
-        [NeedPermission(Modules.Weapons, Operations.Edit)]
+        // GET: Perk/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,23 +70,22 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var weapon = await _context.Weapons.FindAsync(id);
-            if (weapon == null)
+            var perk = await _context.Perks.FindAsync(id);
+            if (perk == null)
             {
                 return NotFound();
             }
-            return View(weapon);
+            return View(perk);
         }
 
-        // POST: Weapon/Edit/5
+        // POST: Perk/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Weapons, Operations.Edit)]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Damage,Level")] Weapon weapon)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Bonus")] Perk perk)
         {
-            if (id != weapon.Id)
+            if (id != perk.Id)
             {
                 return NotFound();
             }
@@ -100,12 +94,12 @@ namespace Permissions.Controllers
             {
                 try
                 {
-                    _context.Update(weapon);
+                    _context.Update(perk);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!WeaponExists(weapon.Id))
+                    if (!PerkExists(perk.Id))
                     {
                         return NotFound();
                     }
@@ -116,11 +110,10 @@ namespace Permissions.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(weapon);
+            return View(perk);
         }
 
-        // GET: Weapon/Delete/5
-        [NeedPermission(Modules.Weapons, Operations.Delete)]
+        // GET: Perk/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,31 +121,30 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var weapon = await _context.Weapons
+            var perk = await _context.Perks
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (weapon == null)
+            if (perk == null)
             {
                 return NotFound();
             }
 
-            return View(weapon);
+            return View(perk);
         }
 
-        // POST: Weapon/Delete/5
+        // POST: Perk/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Weapons, Operations.Delete)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var weapon = await _context.Weapons.FindAsync(id);
-            _context.Weapons.Remove(weapon);
+            var perk = await _context.Perks.FindAsync(id);
+            _context.Perks.Remove(perk);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WeaponExists(int id)
+        private bool PerkExists(int id)
         {
-            return _context.Weapons.Any(e => e.Id == id);
+            return _context.Perks.Any(e => e.Id == id);
         }
     }
 }
