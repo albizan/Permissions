@@ -19,7 +19,9 @@ namespace Permissions.Seeds
             await SeedUsers.SeedAsync(userManager, password);
 
             // Seed modules
+            SeedPerks.Seed(db);
             SeedWeapons.Seed(db);
+            
         }
     }
 }

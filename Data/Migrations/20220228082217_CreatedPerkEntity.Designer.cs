@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Permissions.Data;
 
@@ -11,9 +12,10 @@ using Permissions.Data;
 namespace Permissions.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220228082217_CreatedPerkEntity")]
+    partial class CreatedPerkEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -239,34 +241,6 @@ namespace Permissions.Data.Migrations
                     b.ToTable("PerkWeapon");
                 });
 
-            modelBuilder.Entity("Permissions.Models.Hero", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Attack")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Health")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("WeaponId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WeaponId");
-
-                    b.ToTable("Heroes");
-                });
-
             modelBuilder.Entity("Permissions.Models.Perk", b =>
                 {
                     b.Property<int>("Id")
@@ -374,15 +348,6 @@ namespace Permissions.Data.Migrations
                         .HasForeignKey("WeaponsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Permissions.Models.Hero", b =>
-                {
-                    b.HasOne("Permissions.Models.Weapon", "Weapon")
-                        .WithMany()
-                        .HasForeignKey("WeaponId");
-
-                    b.Navigation("Weapon");
                 });
 #pragma warning restore 612, 618
         }

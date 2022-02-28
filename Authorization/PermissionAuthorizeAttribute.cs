@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Permissions.Constants;
+using Permissions.Utils;
 
 namespace Permissions.Authorization
 {
     public class NeedPermission: AuthorizeAttribute
     {
-        private const string POLICY_PREFIX = "Permissions";
         public NeedPermission(Modules module, Operations operation)
         {
-            Policy = $"{POLICY_PREFIX}.{module}.{operation}";
+            Policy = PolicyNameGenerator.Generate(module, operation);
         }
     }
 }

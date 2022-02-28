@@ -6,7 +6,9 @@ namespace Permissions.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public DbSet<Weapon> Weapons { get; set; }
+        public DbSet<Weapon>? Weapons { get; set; }
+        public DbSet<Perk>? Perks { get; set; }
+        public DbSet<Hero> Heroes { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

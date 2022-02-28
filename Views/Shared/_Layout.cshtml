@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Authorization
+@using Permissions.Utils;
+@using Permissions.Constants;
+@inject IAuthorizationService AuthorizationService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,10 +24,26 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Weapon" asp-action="Index">Weapons</a>
-                        </li>
-                        <partial name="_MenuPartial" />
+                        @if (AuthorizationService.AuthorizeAsync(User, PolicyNameGenerator.Generate(Modules.Weapons, Operations.Read)).Result.Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Weapon" asp-action="Index">Weapons</a>
+                            </li>
+                        }
+                        @if (AuthorizationService.AuthorizeAsync(User, PolicyNameGenerator.Generate(Modules.Perks, Operations.Read)).Result.Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Perk" asp-action="Index">Perks</a>
+                            </li>
+                        }
+                        @if (AuthorizationService.AuthorizeAsync(User, PolicyNameGenerator.Generate(Modules.Heroes, Operations.Read)).Result.Succeeded)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Hero" asp-action="Index">My heroes</a>
+                            </li>
+                        }
+                        
+                        <partial name="_MenuAdminPartial" />
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
