@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Permissions.Authorization;
 using Permissions.Constants;
-using Microsoft.EntityFrameworkCore;
 using Permissions.Data;
 using Permissions.Models;
+using Permissions.ViewModels;
 
 namespace Permissions.Controllers
 {
@@ -150,6 +152,67 @@ namespace Permissions.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [NeedPermission(Modules.Weapons, Operations.Edit)]
+        public async Task<IActionResult> EditPerks(int id)
+        {
+            if (id == null)
+                return NotFound();
+
+            if (_context.Weapons == null || _context.Perks == null)
+                return NotFound();
+
+            var allPerksAvailable = await _context.Perks.ToListAsync();
+            var weapon = await _context.Weapons.Include(w => w.Perks).Where(w => w.Id == id).FirstOrDefaultAsync();
+
+            // Create list of selected perks
+            var selectedPerks = new List<PerkIsSelectedVM>();
+            foreach (var perk in allPerksAvailable)
+            {
+                selectedPerks.Add(new PerkIsSelectedVM() { PerkId = perk.Id, PerkName=perk.Name, PerkIsSelected=false });
+            }
+            // Update list of selected perks with perks from entity
+            foreach (var perk in selectedPerks)
+            {
+                if(weapon.Perks.Any(p => p.Id == perk.PerkId))
+                {
+                    perk.PerkIsSelected = true;
+                }
+            }
+
+            var vm = new WeaponPerks();
+            vm.WeaponId = weapon.Id;
+            vm.Perks = selectedPerks;
+
+            return View(vm);
+        }
+        
+        [HttpPost, ActionName("EditPerks")]
+        [NeedPermission(Modules.Weapons, Operations.Edit)]
+        public async Task<IActionResult> EditPerksPost(WeaponPerks model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Index");
+
+            var weapon = await _context.Weapons.Include(w => w.Perks).Where(w => w.Id == model.WeaponId).FirstOrDefaultAsync();
+            if(weapon == null)
+            {
+                return RedirectToAction("Index");
+            }
+            // Delete all perks from weapon, they will be updated later on
+            weapon.Perks = new List<Perk>();
+
+            var allPerks = await _context.Perks.ToListAsync();
+            foreach(var perk in allPerks) {
+                if(model.Perks.Any(p => p.PerkName == perk.Name && p.PerkIsSelected == true))
+                {
+                    weapon.Perks.Add(perk);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+
+        }
         private bool WeaponExists(int id)
         {
             return _context.Weapons.Any(e => e.Id == id);

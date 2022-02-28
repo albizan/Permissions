@@ -1,29 +1,32 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿#nullable disable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Permissions.Authorization;
 using Permissions.Data;
 using Permissions.Models;
-using Permissions.Constants;
 
 namespace Permissions.Controllers
 {
-    public class PerkController : Controller
+    public class HeroController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public PerkController(ApplicationDbContext context)
+        public HeroController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        [NeedPermission(Modules.Perks, Operations.Read)]
+        // GET: Hero
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Perks.ToListAsync());
+            return View(await _context.Heroes.ToListAsync());
         }
 
-        [NeedPermission(Modules.Perks, Operations.Read)]
+        // GET: Hero/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -31,40 +34,39 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var perk = await _context.Perks
+            var hero = await _context.Heroes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (perk == null)
+            if (hero == null)
             {
                 return NotFound();
             }
 
-            return View(perk);
+            return View(hero);
         }
 
-        [NeedPermission(Modules.Perks, Operations.Create)]
+        // GET: Hero/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Perk/Create
+        // POST: Hero/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Perks, Operations.Create)]
-        public async Task<IActionResult> Create([Bind("Id,Name,Bonus")] Perk perk)
+        public async Task<IActionResult> Create([Bind("Id,Name,Health,Attack")] Hero hero)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(perk);
+                _context.Add(hero);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(perk);
+            return View(hero);
         }
 
-        [NeedPermission(Modules.Perks, Operations.Edit)]
+        // GET: Hero/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,21 +74,22 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var perk = await _context.Perks.FindAsync(id);
-            if (perk == null)
+            var hero = await _context.Heroes.FindAsync(id);
+            if (hero == null)
             {
                 return NotFound();
             }
-            return View(perk);
+            return View(hero);
         }
 
-        
+        // POST: Hero/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Perks, Operations.Edit)]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Bonus")] Perk perk)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Health,Attack")] Hero hero)
         {
-            if (id != perk.Id)
+            if (id != hero.Id)
             {
                 return NotFound();
             }
@@ -95,12 +98,12 @@ namespace Permissions.Controllers
             {
                 try
                 {
-                    _context.Update(perk);
+                    _context.Update(hero);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PerkExists(perk.Id))
+                    if (!HeroExists(hero.Id))
                     {
                         return NotFound();
                     }
@@ -111,10 +114,10 @@ namespace Permissions.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(perk);
+            return View(hero);
         }
 
-        [NeedPermission(Modules.Perks, Operations.Delete)]
+        // GET: Hero/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,30 +125,30 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var perk = await _context.Perks
+            var hero = await _context.Heroes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (perk == null)
+            if (hero == null)
             {
                 return NotFound();
             }
 
-            return View(perk);
+            return View(hero);
         }
 
+        // POST: Hero/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [NeedPermission(Modules.Perks, Operations.Delete)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var perk = await _context.Perks.FindAsync(id);
-            _context.Perks.Remove(perk);
+            var hero = await _context.Heroes.FindAsync(id);
+            _context.Heroes.Remove(hero);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PerkExists(int id)
+        private bool HeroExists(int id)
         {
-            return _context.Perks.Any(e => e.Id == id);
+            return _context.Heroes.Any(e => e.Id == id);
         }
     }
 }

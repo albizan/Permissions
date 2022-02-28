@@ -3,6 +3,7 @@
     public enum Modules
     {
         Weapons,
+        Perks,
         Heroes
     }
 }

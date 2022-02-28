@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Permissions.Constants
 @inject UserManager<IdentityUser> UserManager
+@using Microsoft.AspNetCore.Authorization
+@using Permissions.Utils;
+@inject IAuthorizationService AuthorizationService
 
 <ul class="navbar-nav">
 @if (User.IsInRole(Roles.Admin.ToString()))
@@ -11,9 +14,9 @@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Roles</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Perk" asp-action="Index">Perks</a>
-    </li>
 }
+
+
+
 
 </ul>

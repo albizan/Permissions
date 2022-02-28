@@ -41,20 +41,20 @@
                         @if(role.Name != Roles.Admin.ToString())
                         {
                             <div class="btn-group dropdown">
-                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu shadow animated--grow-in">
-                                <li>
-                                    <a asp-action="Delete" asp-route-Id="@role.Id" class="dropdown-item">Delete</a>
-                                </li>
-                                <li>
-                                    <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
-                                        Manage Permissions
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu shadow animated--grow-in">
+                                    <li>
+                                        <a asp-action="Delete" asp-route-Id="@role.Id" class="dropdown-item">Delete</a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Permission" asp-action="Index" asp-route-roleId="@role.Id" class="dropdown-item">
+                                            Manage Permissions
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         }
                     
                     </td>
