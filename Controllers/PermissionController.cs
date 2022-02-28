@@ -23,6 +23,12 @@ namespace Permissions.Controllers
         {
             if (roleId == null)
                 return NotFound(roleId);
+
+            var role = await _roleManager.FindByIdAsync(roleId);
+            if (role.ToString() == Roles.Admin.ToString())
+            {
+                return RedirectToAction("Index", "Role");
+            }
             var allPermissions = new List<RoleClaim>();
 
             // Create a list of permissions for every module (entity) of the app
@@ -37,7 +43,7 @@ namespace Permissions.Controllers
             }
             
             // Get current permissions for given role
-            var role = await _roleManager.FindByIdAsync(roleId);
+            
             var currentClaims = await _roleManager.GetClaimsAsync(role);
             var currentClaimValues = currentClaims.Select(a => a.Value).ToList();
             var allPossibleClaimValues = allPossibleClaims.Select(a => a.Value).ToList();
