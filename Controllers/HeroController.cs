@@ -47,6 +47,7 @@ namespace Permissions.Controllers
         // GET: Hero/Create
         public IActionResult Create()
         {
+            ViewData["Weapons"] = new SelectList(_context.Weapons.ToList(), "Id", "Name");
             return View();
         }
 
