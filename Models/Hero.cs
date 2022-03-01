@@ -1,4 +1,6 @@
-﻿namespace Permissions.Models
+﻿using System.ComponentModel;
+
+namespace Permissions.Models
 {
     public class Hero
     {
@@ -7,6 +9,7 @@
         public int Health { get; set; }
         public int Attack { get; set; }
         public Weapon? Weapon { get; set; }
+        [DisplayName("Weapon")]
         public int? WeaponId { get; set; }
     }
 }

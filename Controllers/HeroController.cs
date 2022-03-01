@@ -47,7 +47,7 @@ namespace Permissions.Controllers
         // GET: Hero/Create
         public IActionResult Create()
         {
-            ViewData["Weapons"] = new SelectList(_context.Weapons.ToList(), "Id", "Name");
+            ViewData["Weapons"] = new SelectList(_context.Weapons.ToList(), nameof(Hero.Id), nameof(Hero.Name));
             return View();
         }
 
@@ -56,7 +56,7 @@ namespace Permissions.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Health,Attack")] Hero hero)
+        public async Task<IActionResult> Create([Bind("Id,Name,Health,Attack,WeaponId")] Hero hero)
         {
             if (ModelState.IsValid)
             {
@@ -75,11 +75,12 @@ namespace Permissions.Controllers
                 return NotFound();
             }
 
-            var hero = await _context.Heroes.FindAsync(id);
+            var hero = await _context.Heroes.Include(h => h.Weapon).Where(h => h.Id == id).FirstOrDefaultAsync();
             if (hero == null)
             {
                 return NotFound();
             }
+            ViewData["Weapons"] = new SelectList(_context.Weapons.ToList(), nameof(Hero.Id), nameof(Hero.Name));
             return View(hero);
         }
 
@@ -88,7 +89,7 @@ namespace Permissions.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Health,Attack")] Hero hero)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Health,Attack,WeaponId")] Hero hero)
         {
             if (id != hero.Id)
             {
