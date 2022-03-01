@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Permissions.Authorization;
 using Permissions.Constants;
@@ -168,12 +167,12 @@ namespace Permissions.Controllers
             var selectedPerks = new List<PerkIsSelectedVM>();
             foreach (var perk in allPerksAvailable)
             {
-                selectedPerks.Add(new PerkIsSelectedVM() { PerkId = perk.Id, PerkName=perk.Name, PerkIsSelected=false });
+                selectedPerks.Add(new PerkIsSelectedVM() { PerkId = perk.Id, PerkName = perk.Name, PerkIsSelected = false });
             }
             // Update list of selected perks with perks from entity
             foreach (var perk in selectedPerks)
             {
-                if(weapon.Perks.Any(p => p.Id == perk.PerkId))
+                if (weapon.Perks.Any(p => p.Id == perk.PerkId))
                 {
                     perk.PerkIsSelected = true;
                 }
@@ -185,7 +184,7 @@ namespace Permissions.Controllers
 
             return View(vm);
         }
-        
+
         [HttpPost, ActionName("EditPerks")]
         [NeedPermission(Modules.Weapons, Operations.Edit)]
         public async Task<IActionResult> EditPerksPost(WeaponPerks model)
@@ -194,7 +193,7 @@ namespace Permissions.Controllers
                 return RedirectToAction("Index");
 
             var weapon = await _context.Weapons.Include(w => w.Perks).Where(w => w.Id == model.WeaponId).FirstOrDefaultAsync();
-            if(weapon == null)
+            if (weapon == null)
             {
                 return RedirectToAction("Index");
             }
@@ -202,8 +201,9 @@ namespace Permissions.Controllers
             weapon.Perks = new List<Perk>();
 
             var allPerks = await _context.Perks.ToListAsync();
-            foreach(var perk in allPerks) {
-                if(model.Perks.Any(p => p.PerkName == perk.Name && p.PerkIsSelected == true))
+            foreach (var perk in allPerks)
+            {
+                if (model.Perks.Any(p => p.PerkName == perk.Name && p.PerkIsSelected == true))
                 {
                     weapon.Perks.Add(perk);
                 }
